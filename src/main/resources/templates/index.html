@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org/%22%3E">
+<head>
+    <meta charset="UTF-8">
+    <title>Student Administration</title>
+    <link rel="stylesheet" type="text/css" href="/css/styles.css">
+</head>
+<body>
+<h1>Velkommen til Student Administrationen</h1>
+<img src="../img/kealogo2.png" alt="KEA" width="350" height="130">
+
+
+<table>
+    <tr>
+        <td><a href="/create"><button>Create New Student</button></a></td>
+    </tr>
+    <tr>
+        <th>First name</th>
+        <th>Last name</th>
+        <th>Enrollment</th>
+    </tr>
+     <tr th:each="student : ${students}">
+        <td th:text="${student.firstName}"></td>
+        <td th:text="${student.lastName}"></td>
+        <td th:text="${student.enrollmentDate}"></td>
+        <td><a th:href="@{/student(id=${student.id})}"><button>Details</button></a></td>
+         <td><a th:href="@{/edit(id=${student.id})}"><button>Edit</button></a></td>
+         <td><a th:href="@{/delete(id=${student.id})}"><button>Delete</button></a></td>
+    </tr>
+
+
+
+
+</body>
+</html>
