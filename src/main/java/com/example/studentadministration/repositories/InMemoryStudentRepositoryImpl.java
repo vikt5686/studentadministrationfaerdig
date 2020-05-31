@@ -21,9 +21,9 @@ public class InMemoryStudentRepositoryImpl implements IStudentRepository{
     }
 
     @Override
-    public Student create(Student student) {
+    public boolean create(Student student) {
 
-        return student;
+        return false;
     }
 
     @Override

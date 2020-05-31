@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>Create User</title>
+    <link rel="stylesheet" type="text/css" href="/css/styles.css">
+    <title>Student details</title>
+</head>
+<body>
+
+
+
+
+<h4>Details for:
+<tr th:each="student : ${students}" >
+    <span class="studentNameColor" th:text="${student.firstName}"></span>&nbsp<span class="studentNameColor" th:text="${student.lastName}"></span>
+    </h4>
+
+    <br><br>
+
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>First name</th>
+            <th>Last name</th>
+            <th>Enrollment</th>
+            <th>CPR</th>
+        </tr>
+
+
+        <tr th:each="student : ${students}">
+            <th th:text="${student.id}"></th>
+            <th th:text="${student.firstName}"></th>
+            <th th:text="${student.lastName}"></th>
+            <th th:text="${student.enrollmentDate}"></th>
+            <th th:text="${student.cpr}"></th>
+        </tr>
+    </table>
+</tr>
+</body>
+</html>

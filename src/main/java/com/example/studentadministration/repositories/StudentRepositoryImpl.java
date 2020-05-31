@@ -7,15 +7,20 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+
+import static java.sql.Date.valueOf;
+import static javax.swing.UIManager.getInt;
+import static javax.swing.UIManager.getString;
 
 public class StudentRepositoryImpl implements IStudentRepository{
 
 
 
     private Connection conn;
-    private static final String INSERT = "INSERT INTO Students(firstName, lastName, enrollmentDate, cpr) VALUES (?, ?, ?, ?)";
 
 
 
@@ -27,38 +32,43 @@ public class StudentRepositoryImpl implements IStudentRepository{
 
 
     @Override
-    public Student create(Student student){
+    public boolean create(Student student){
 
-    Student newStudent = new Student();
+
         try {
-            PreparedStatement statement = conn.prepareStatement("INSERT INTO students(firstName, lastName, enrollmentDate, cpr) VALUES (?, ?, ?, ?");
-            ResultSet rs = statement.executeQuery();
-             {
-                newStudent = new Student();
-            newStudent.setFirstName(rs.getString(1));
-            newStudent.setLastName(rs.getString(2));
-            newStudent.setEnrollmentDate(rs.getDate(3));
-            newStudent.setCpr(String.valueOf(rs.getInt(4)));
+            PreparedStatement statement = conn.prepareStatement("INSERT INTO students (student_id, first_name, last_name, enrollment_date, cpr_nr) VALUES (?, ?, ?, ?, ?)");
 
-            }
+            SimpleDateFormat convert = new SimpleDateFormat("yyyy-MM-dd");
+           String dateInCorrectFormat = convert.format(student.getEnrollmentDate());
+            System.out.println(dateInCorrectFormat);
+                statement.setInt(1, student.getId());
+                statement.setString(2, student.getFirstName());
+                statement.setString(3, student.getLastName());
+                statement.setString(4, dateInCorrectFormat);
+                statement.setString(5, student.getCpr());
+                statement.executeUpdate();
+
         }catch (SQLException e) {
-            e.printStackTrace();
+            System.out.println(e);
 
         }
-        return newStudent;
+        return true;
     }
 
+    private Date getDate(int i) {
+        return null;
+    }
 
 
     @Override
     public Student read(int id) {
         Student studentToReturn = new Student();
         try {
-            PreparedStatement getSingleStudent = conn.prepareStatement("SELECT * FROM students WHERE students_id=?");
+            PreparedStatement getSingleStudent = conn.prepareStatement("SELECT * FROM students WHERE student_id="+id);
             ResultSet rs = getSingleStudent.executeQuery();
             while(rs.next()){
                 studentToReturn = new Student();
-                studentToReturn.setCpr(String.valueOf(rs.getInt(1)));
+                studentToReturn.setId((rs.getInt(1)));
                 studentToReturn.setFirstName(rs.getString(2));
                 studentToReturn.setLastName(rs.getString(3));
                 studentToReturn.setEnrollmentDate(rs.getDate(4));
@@ -96,11 +106,47 @@ public class StudentRepositoryImpl implements IStudentRepository{
     public boolean update(Student student) {
 
 
-        return false;
+        try {
+            PreparedStatement updatestatement = conn.prepareStatement("UPDATE students SET student_id = ?, first_name = ?, last_name = ?, enrollment_date = ?, cpr_nr = ? WHERE student_id = ?");
+
+            SimpleDateFormat convert = new SimpleDateFormat("yyyy-MM-dd");
+            String dateInCorrectFormat = convert.format(student.getEnrollmentDate());
+            System.out.println(dateInCorrectFormat);
+
+            updatestatement.setInt(1, student.getId());
+            updatestatement.setString(2, student.getFirstName());
+            updatestatement.setString(3, student.getLastName());
+            updatestatement.setString(4, dateInCorrectFormat);
+            updatestatement.setString(5, student.getCpr());
+            updatestatement.setInt(6, student.getId());
+            updatestatement.executeUpdate();
+
+
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+
+        return true;
     }
 
     @Override
     public boolean delete(int id) {
-        return false;
+
+        try {
+            PreparedStatement deleteStatement = conn.prepareStatement("DELETE FROM students WHERE student_id = ?");
+
+            deleteStatement.setInt(1, id);
+            deleteStatement.executeUpdate();
+
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return true;
     }
+
+
 }
